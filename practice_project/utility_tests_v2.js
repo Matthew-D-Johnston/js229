@@ -68,7 +68,86 @@ var _ = function(element) {
       } else {
         return samples;
       }
-    }
+    },
+    findWhere(obj) {
+      let properties = Object.getOwnPropertyNames(obj);
+      let foundObj = undefined;
+
+      for (let idx = 0; idx < element.length; idx += 1) {
+        if (properties.every(prop => element[idx][prop] === obj[prop])) {
+          foundObj = element[idx];
+          break;
+        }
+      }
+      return foundObj;
+    },
+    where(obj) {
+      let properties = Object.getOwnPropertyNames(obj);
+
+      return element.filter(elObj => properties.every(prop => elObj[prop] === obj[prop]));
+    },
+    pluck(prop) {
+      return element.map(obj => {
+        if (obj[prop]) {
+          return obj[prop];
+        }
+      });
+    },
+    keys() {
+      let properties = Object.getOwnPropertyNames(element);
+      return properties;
+    },
+    values() {
+      let properties = Object.getOwnPropertyNames(element);
+      return properties.map(prop => element[prop]);
+    },
+    pick(...args) {
+      let resultObj = {};
+      args.forEach(prop => {
+        if (element[prop]) {
+          resultObj[prop] = element[prop];
+        }
+      });
+
+      return resultObj;
+    },
+    omit(...args) {
+      let resultObj = {};
+      let properties = Object.getOwnPropertyNames(element);
+
+      properties.forEach(prop => {
+        if (!args.includes(prop)) {
+          resultObj[prop] = element[prop];
+        }
+      });
+
+      return resultObj;
+    },
+    has(prop) {
+      let properties = Object.getOwnPropertyNames(element);
+      return properties.includes(prop);
+    },
+    isElement(val) {
+      return typeof val === 'object' && val instanceof Element;
+    },
+    isArray(val) {
+      return typeof val === 'object' && val.length !== undefined;
+    },
+    isObject(val) {
+      return typeof val === 'object' || typeof val === 'function';
+    },
+    isFunction(val) {
+      return typeof val === 'function';
+    },
+    isBoolean(val) {
+      return typeof val === 'boolean' || val instanceof Boolean;
+    },
+    isString(val) {
+      return typeof val === 'string' || val instanceof String;
+    },
+    isNumber(val) {
+      return typeof val === 'number' || val instanceof Number;
+    },
   }
 
   return u;
@@ -90,6 +169,44 @@ _.range = function(...args) {
   }
 
   return values;
+}
+
+_.extend = function(...args) {
+  let result = args[0];
+  let extensionObjs = args.slice(1);
+  extensionObjs.forEach(obj => {
+    let properties = Object.getOwnPropertyNames(obj);
+    properties.forEach(prop => result[prop] = obj[prop]);
+  });
+  return result;
+}
+
+_.isElement = function(val) {
+  return typeof val === 'object' && val instanceof Element;
+}
+
+_.isArray = function(val) {
+  return typeof val === 'object' && val.length !== undefined;
+}
+
+_.isObject = function(val) {
+ return typeof val === 'object' || typeof val === 'function';
+}
+
+_.isFunction = function(val) {
+  return typeof val === 'function';
+}
+
+_.isBoolean = function(val) {
+  return typeof val === 'boolean' || val instanceof Boolean;
+}
+
+_.isString = function(val) {
+  return typeof val === 'string' || val instanceof String;
+}
+
+_.isNumber = function(val) {
+  return typeof val === 'number' || val instanceof Number;
 }
 
 test("_ is defined", function() {

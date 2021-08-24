@@ -196,6 +196,8 @@
       return toString.call(obj) === "[object " + method + "]";
     };
   });
-  
+
   window._ = _;
 })();
+
+// test
